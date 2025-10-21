@@ -1,4 +1,4 @@
-const BACKEND_URL = "https://mumu-8u3h.onrender.com"
+const BACKEND_URL = "https://mumu-backend.onrender.com"; // change to your backend URL
 
 async function sendMessage() {
   const input = document.getElementById("user-input");
@@ -8,7 +8,7 @@ async function sendMessage() {
   appendMessage(message, "user");
   input.value = "";
 
-  appendMessage("MUMU is thinking...", "bot");
+  const thinking = appendMessage("MUMU is thinking...", "bot");
 
   try {
     const response = await fetch(BACKEND_URL, {
@@ -18,10 +18,11 @@ async function sendMessage() {
     });
 
     const data = await response.json();
-    document.querySelectorAll(".bot").pop; // remove "thinking..." text
-    appendMessage(data.reply || "MUMU had trouble replying 😅", "bot");
+    thinking.remove();
+    appendMessage(data.reply || "MUMU didn’t reply 😅", "bot");
   } catch (error) {
-    appendMessage("⚠️ Error connecting to MUMU backend.", "bot");
+    thinking.remove();
+    appendMessage("⚠️ MUMU is offline or network error.", "bot");
     console.error(error);
   }
 }
@@ -33,4 +34,5 @@ function appendMessage(text, sender) {
   msg.textContent = text;
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
+  return msg;
 }
